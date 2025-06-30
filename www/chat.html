@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatting Platform</title>
+    <style>
+        body {
+            background-color: darkgrey;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            font: monospace;
+        }
+        
+       .mine {
+			margin: 10px 0;
+			max-width: 100%;
+			padding: 15px;
+			background-color: rgba(100,50,50,1);
+			border-radius: 15px;
+			color: white;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+			font-family: monospace;
+		}
+
+		.theirs {
+			margin: 10px 0;
+			max-width: 100%;
+			padding: 15px;
+			background-color: rgba(50,50,100,1);
+			border-radius: 15px;
+			color: white;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			font-family: monospace;
+			
+		}
+		input {
+			width: 80%;
+			height: 20px;
+			font-size:25px;
+			border-radius: 30px;
+			padding: 20px;
+		}
+		button {		
+			width: 65px;
+			height: 65px;
+			border-radius: 100%; /*IDK what 100% will do but i want circle*/
+		}
+    </style>
+</head>
+<body>
+    <div class="chat-container" id = "chat-container">
+        
+    </div>
+    <div style="display: flex;" id="input-container">
+		<input type="text" id="textbox"maxlength="111"><br>
+		<button onclick = "message();" id="send">Send</button>
+		
+    </div>
+    
+    <script>
+    	var username = prompt("Enter Username (you are anonymous, this is the only way to identify you)")
+    	if(username == "sns"){
+    		if(window.localStorage.firstName === "Agni" || window.localStorage.fName === "Agni"){
+    			if(localStorage.id != "807377"){
+    				if(promt("WHAT IS THE PASSWORD?")!="123x"){
+						username == " {*not real*} sns";
+    				}else{
+    					alert("ok");
+    				}
+    			}
+    		}else{
+    			username == " {*not real*} sns";
+    		}
+    	}
+    	console.log(localStorage.fname);
+    	if(localStorage.fname==="Agni"){
+			document.getElementById("input-container").innerHTML+=`<button style="background-color: red" onclick = "clearChat();" >Clear</button>	`;
+		}
+		let lastClickTime = 0; // Track the last click time
+        let cooldownTime = 1500;
+        function handleClick() {
+            const currentTime = Date.now(); // Get the current time
+
+            // Check if the cooldown period has passed
+            if (currentTime - lastClickTime < cooldownTime) {
+                alert("You're sending too fast. Please wait.");
+                cooldownTime*=1.1;
+                
+		        // Update the last click time
+		        lastClickTime = currentTime;
+                return false; // Prevent further action
+            }
+
+
+            // Update the last click time
+            lastClickTime = currentTime;
+            // Perform the button's action
+            //alert("Button clicked!");
+            return true;
+        }
+
+    	function message(){
+    		if(handleClick()){
+				var val = document.getElementById("textbox").value
+				if(val){
+					document.getElementById("textbox").value = "";
+					var currentDate = new Date();
+					var formattedDate = currentDate.toDateString();
+					var formattedTime = currentDate.toLocaleTimeString();
+					//console.log("Current Date and Time: " + formattedDate + " " + formattedTime);
+					
+					send("("+username+"): "+val.replaceAll(" ", "&nbsp;")+"&nbsp;".repeat(110-val.length-username.length)+"["+localStorage.id+"] "+formattedDate + " " + formattedTime);
+				}else{
+					alert("Cannot send empty message")
+				}
+    		}
+    	}
+    	function clearChat(){
+    		console.log("clering")
+    		send("Clearing", true)
+    	}
+ 
+    	document.getElementById("textbox").addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                document.getElementById("send").click();
+                
+            }
+        });
+    	
+    	//a poll message is where i send a request to the server, and the server doesnt reply UNTIL something happens (a new message is recieved)
+    	function pollMessages() {
+			fetch('/messageUpdates', {
+				method: 'GET', 
+			})
+			.then(response => response.text())
+			.then(data => {
+			    getMessages();
+			    console.log("debbugung: "+data)
+				// Restart polling after processing
+				pollMessages();
+			})
+			.catch(error => {
+				console.error("Polling error:", error);
+				// Retry polling after an error
+				setTimeout(pollMessages, 1000);
+			});
+		}
+		//Start polling.
+		pollMessages();
+		
+	    //Its named 'filecontent' because it used to be retrived from a file, but now its
+	    //static (ngrok gave me a static url)
+	    var fileContent = "https://" + location.hostname;
+		function scrollBottom() {
+			var chatContainer = document.getElementById("chat-container");
+			chatContainer.scrollTop = chatContainer.scrollHeight;
+		}
+		
+		function updateChatContainer(data){
+			var chatContainer = document.getElementById("chat-container");
+			chatContainer.innerHTML = data;  // Inject fetched content into the container
+			//Replace all the 'name' classes with the actual class: 
+			var parent = document.getElementById("chat-container");
+			
+			//Get the variable childen destructured from parent (children = parent.children)
+			var {children} = parent;
+			
+			for(var i in children){
+				var child = children[i];
+				//console.log(i+":"+child);
+				if(child.className !== "mine" && child.className !== "theirs"){
+					//Make the message mine or yours depending on your name.
+					if(child.className === window.localStorage.getItem("fullName")) child.className = "mine";
+					else child.className = "theirs";
+				}
+				
+			}
+			if(children.length === 0){
+				parent.innerHTML=
+				`
+				<div style="text-align:center; color: black">Start Chatting Here</div>
+				`
+			}
+			scrollBottom();
+		}
+
+    	function getMessages(){
+			
+
+			// Fetch the HTML content from the server
+			fetch(fileContent + '/messages', {  // Server endpoint
+				method: 'GET',  // Use GET to match the server endpoint
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.text();  // Parse the response as text (HTML)
+			})
+			.then(data => {
+				updateChatContainer(data);
+				
+			})
+			.catch(error => console.error('Error:', error));  // Log errors
+			
+			scrollBottom();
+		}
+		getMessages();
+	
+		if(!localStorage.id) localStorage.id = floor(Math.random()*1000)
+		//var s = setInterval(getMessages,3000)
+        function send(message, clear) {
+			console.log("message sent");
+			
+			// Return a Promise
+			return fetch(fileContent + '/chat', {  // URL of the server endpoint
+				method: 'POST',  // HTTP method (POST)
+				headers: {
+				    'Content-Type': 'application/json'  // Set content type to JSON
+				},
+				body: JSON.stringify({ message: message, name: window.localStorage.getItem("fullName"), shouldClear: clear, id: localStorage.id})
+			})
+			.then(response => response.text())
+			.then(txt=>{
+				if(txt=="your banned"){
+					alert("ur banned !!!!")
+				}
+			})  // Wait for the response and parse it as text
+			.catch(error => {
+				console.error('Error:', error);
+				throw error; // Re-throw the error so it can be caught in the chain
+			});
+		}
+
+        
+    </script>
+</body>
+</html>
+

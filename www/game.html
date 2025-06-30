@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>WebSocket Client</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				margin: 20px;
+			}
+
+			#messages {
+				border: 1px solid #ccc;
+				padding: 10px;
+				height: 300px;
+				overflow-y: scroll;
+			}
+		</style>
+	</head>
+	<body>
+	
+		<canvas id="screen" width="100px" height="100px"></canvas>
+		<script>
+		
+		var canvas = document.getElementById("screen");
+		var context = canvas.getContext("2d"), ctx = context;
+		function fill(color) {
+			fillColor = color;
+		}
+
+		function rect(x, y, w, h) {
+			ctx.fillStyle = fillColor;
+			ctx.fillRect(x, y, w, h);
+		}
+
+		function line(x1, y1, x2, y2) {
+			ctx.beginPath();
+			ctx.moveTo(x1, y1);
+			ctx.lineTo(x2, y2);
+			ctx.strokeStyle = fillColor;
+			ctx.stroke();
+			ctx.closePath();
+		}
+
+		function circle(x, y, s) {
+			ctx.beginPath();
+			ctx.arc(x, y, s, 0, Math.PI * 2);
+			ctx.fillStyle = fillColor;
+			ctx.fill();
+			ctx.closePath();
+		}
+		fill("red")
+		</script>
+
+		<h1>WebSocket Client</h1>
+		<div id="messages"></div>
+		<script>
+		try{
+			var draw = function(){
+				console.log("Old draw...?")
+			};
+			// Change this URL to your WebSocket server URL.
+			const socket = new WebSocket("wss://"+ location.hostname);
+			window.socket = socket;
+			var x = null;
+			var y = null;
+			var index = null;
+			const messagesDiv = document.getElementById('messages');
+
+			// Append messages to the messages div.
+			function appendMessage(msg) {
+				const p = document.createElement('p');
+				p.textContent = msg;
+				messagesDiv.appendChild(p);
+				
+				var children = messagesDiv.children;
+				
+				if (children.length > 10) {
+					messagesDiv.removeChild(children[0]); // Remove the first message
+				}
+			}
+
+			function Player(x, y){
+				this.x = x;
+				this.y = y;
+			}
+			var players = [];
+			function send(message, socket) {
+				if (!socket) {
+					throw new Error("Expected Socket");
+				}
+				socket.send(JSON.stringify(message))
+				appendMessage(JSON.stringify(message))
+			}
+			
+			function updatePlayers(socket){
+				
+				send({action: "getPlayers"}, socket)
+			}
+
+			socket.onopen = function() {
+				updateScreen();
+				appendMessage("Connected to WebSocket server");
+				
+				send({
+					action: "newPlayer",
+				}, socket);
+			};
+
+			socket.onmessage = function(event) {
+				var data = event.data;
+				data = JSON.parse(data);
+				//console.log(typeof data)
+				appendMessage("Received: " + data);
+				console.log(data);
+				
+				//window.dat = data
+				//console.log(data)
+				switch(data.action){
+					case "getPlayers":
+						players = data.reply;
+						x = players[index].x
+						y = players[index].y
+					break;
+					case "newPlayer":
+						index = data.reply;
+					break;
+				}
+			};
+			
+			socket.onerror = function(error) {
+				appendMessage("WebSocket Error: " + error);
+			};
+
+			socket.onclose = function() {
+				appendMessage("WebSocket connection closed");
+			};
+			
+			
+			function drawPlayer(player){
+				rect(player.x, player.y, 10, 10);
+			}
+			
+			//Game Code Here
+			var ticks=0;
+			var draw = function(){
+				console.log("Draw");
+				ticks++;
+				
+				for(var i=0;i<players.length;i++){
+					drawPlayer(players[i]);
+					if(window.moveLeft){
+						y+=0.02;
+					}
+					//console.log(i)
+				}if(ticks%15===0){
+					updatePlayers(socket);
+					send({
+						action: "updatePlayerPos",
+						reply: {
+							x: x,
+							y: y,
+							index: index
+						}
+					}, socket)
+				}
+			}
+			//End Game Code
+			
+			
+		
+			function updateScreen(){
+				draw();
+				
+				requestAnimationFrame(updateScreen);
+			}
+			
+		}catch(e){
+			console.log(e);
+		}
+		</script>
+	</body>
+</html>
+

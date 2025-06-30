@@ -1,0 +1,130 @@
+
+
+<!DOCTYPE html>
+<html class="head">
+    <style>
+        .head{
+            background-color:black;
+            font-family:monospace;
+            color:white;
+        }
+        .home{
+            font-size:20px;
+            
+            /*border:3px solid red;*/
+            margin:80px;
+            color:red;
+        }
+        
+        .games{
+            font-size:20px;
+            
+            /*border:3px solid green;*/
+            margin:50px;
+            color:green;
+        }
+        .me{
+            font-size:20px;
+                        
+            /*border:3px solid blue;*/
+            margin:50px;
+            color:blue;
+        }
+        
+        .contact{
+            
+            font-size:20px;
+                        
+            /*border:3px solid blue;*/
+            margin:50px;
+            color:pink;
+        }
+        
+        .movies{
+            font-size:20px;
+            margin:50px;
+            color:yellow;
+        }
+      
+        .secrets{
+            font-size:20px;
+            margin:50px;
+            color:orange;
+        }
+    </style>
+    <head>
+        <title>webpage,...</title>
+    </head>
+    <body>
+    
+        <a class="home" href="https://agni2012.github.io/home">Home</a>
+        
+        <a class="me" href="https://agni2012.github.io/me">Me</a>
+        <a class="games" href="https://agni2012.github.io/games">Games</a>
+        <a class="contact" href="https://agni2012.github.io/contact">Contact</a>
+        
+        <a class="movies" href="https://agni2012.github.io/movies">Movies (New!)</a>
+      
+        <a class="secrets" href="https://agni2012.github.io/secrets">Secrets</a>
+        <hr>
+        <p>
+            <p id="greeting"></p>
+            Hi, I Am Agni Rammohan! <br>
+            All my games are in the games section!<br>
+            are you in 6th grade?<br>
+            <p>
+            Enter your first and last name here: <br>
+            <input id="input"><br>
+            <button onClick="storeName()"> Done </button>
+            </p>
+            
+            
+        </p>
+      
+        <script>
+            function greet(){
+                if(window.localStorage.getItem("fname") != null) {
+                    document.getElementById("greeting").innerHTML="Hello " + window.localStorage.getItem("fname")+"!";
+                }
+            }
+            
+            greet();
+            function storeName(){
+                if(window.localStorage.getItem("fullName")!="Evil_Impersonator The_Bad"){
+                    var fullName = document.getElementById("input").value;
+                    window.localStorage.setItem("fname", fullName.split(" ")[0])
+                    window.localStorage.setItem("lname", fullName.split(" ")[1])
+                    window.localStorage.setItem("fullName", fullName)
+                    alert("Name Stored.");
+                }else{
+                    var changeNameCode=prompt("Nat so easy! If you want to change your name back, bring this computer to me so I can enter theis passcode: ");
+                    if(changeNameCode == "__ingot__"){
+                        alert("Ok!");
+                        var fullName = document.getElementById("input").value;
+                        window.localStorage.setItem("fname", fullName.split(" ")[0])
+                        window.localStorage.setItem("lname", fullName.split(" ")[1])
+                        window.localStorage.setItem("fullName", fullName)
+                    }else{
+                        alert("Nah for real");
+                    }
+                }
+                
+                if(window.localStorage.getItem("fname") == "Agni"){
+                    var code=prompt("Ok then. If you really am Agni Rammohan, enter the passcode:")
+                    if(code == "__ingot__"){
+                        alert("All Clear!");
+                    }else{
+                        alert("Ok you are not getting away with this. Your name is Evil_Impersonator The_Bad until I fix it for you!")
+                        var fullName = "Evil_Impersonator The_Bad"
+                        window.localStorage.setItem("fname", fullName.split(" ")[0])
+                        window.localStorage.setItem("lname", fullName.split(" ")[1])
+                        window.localStorage.setItem("fullName", fullName)
+                    }
+                }
+                greet()
+            }
+        </script>
+    </body>
+    
+</html>
+

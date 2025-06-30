@@ -1,0 +1,145 @@
+
+
+<!DOCTYPE html>
+<html class="head">
+    <style>
+    	button {
+    		background-color: #918fba;
+
+    	}
+    	button:hover {
+		  background-color: #18a859; /* Green */
+		  color: white;
+		}
+				/* Add a black background color to the top navigation */
+		.topnav {
+		  background-color: #918fba;
+		  overflow: hidden;
+		}
+
+		/* Style the links inside the navigation bar */
+		.topnav a {
+		  float: left;
+		  color: #000;
+		  text-align: center;
+		  padding: 14px 60px;
+		  text-decoration: none;
+		  font-size: 17px;
+		}
+
+		/* Change the color of links on hover */
+		.topnav a:hover {
+		  background-color: #65a16f;
+		  color: black;
+		}
+
+		/* Add a color to the active/current link */
+		.topnav a.active {
+		  background-color: #b3f6ff;
+		  color: black;
+		}
+		.inter-<uniquifier> {
+		  font-family: "Inter", sans-serif;
+		  font-optical-sizing: auto;
+		  font-weight: <weight>;
+		  font-style: normal;
+		  font-variation-settings:
+			"slnt" 0;
+		}
+    	.input{
+    		border: 1px solid black;
+    		background-color: #c0bce8;
+    		width: 150px;
+    		height: 15px;
+    	}
+        .head{
+            background-color:#00bfff;
+            font-family:monospace;
+            color:black;
+		  	font-family: "Inter", sans-serif;
+		  	font-size: 15px
+        }
+        
+    </style>
+    <head>
+        <title>My Webpage</title>
+        
+        <!-- Fonts  -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+		
+		
+    </head>
+    <body>
+    	
+    	<div class="topnav">
+			<a class="active" href="/home">Home</a>
+			<a href="/me">Me</a>
+			<a href="/games">Games</a>
+			<a href="/contact">Contact</a>
+			<a href="/movies">Movies</a>
+			<a href="/secrets">Secrets</a>
+		</div>
+		
+        <p>
+            <p id="greeting"></p>
+            Hi, I am Agni Rammohan! <br>
+            All my games are in the games section!<br>
+            Are you in 6th grade?<br>
+            <p>
+            Enter your first and last name here: <br>
+            <input id="input" class="input"><br>
+            <button onClick="storeName()" > Done </button>
+            </p>
+            
+            
+        </p>
+      
+        <script>
+            function greet(){
+                if(window.localStorage.getItem("fname") != null) {
+                    document.getElementById("greeting").innerHTML="Hello " + window.localStorage.getItem("fname")+"!";
+                }
+            }
+            
+            greet();
+            function storeName(){
+                if(window.localStorage.getItem("fullName")!="Evil_Impersonator The_Bad"){
+                    var fullName = document.getElementById("input").value;
+                    window.localStorage.setItem("fname", fullName.split(" ")[0])
+                    window.localStorage.setItem("lname", fullName.split(" ")[1])
+                    window.localStorage.setItem("fullName", fullName)
+                    alert("Name Stored.");
+                }else{
+                    var changeNameCode=prompt("Nat so easy! If you want to change your name back, bring this computer to me so I can enter theis passcode: ");
+                    if(changeNameCode == "__ingot__"){
+                        alert("Ok!");
+                        var fullName = document.getElementById("input").value;
+                        window.localStorage.setItem("fname", fullName.split(" ")[0])
+                        window.localStorage.setItem("lname", fullName.split(" ")[1])
+                        window.localStorage.setItem("fullName", fullName)
+                    }else{
+                        alert("Nah for real");
+                    }
+                }
+                
+                if(window.localStorage.getItem("fname") == "Agni"){
+                    var code=prompt("Ok then. If you really am Agni Rammohan, enter the passcode:")
+                    if(code == "__ingot__"){
+                        alert("All Clear!");
+                    }else{
+                        alert("Ok you are not getting away with this. Your name is Evil_Impersonator The_Bad until I fix it for you!")
+                        var fullName = "Evil_Impersonator The_Bad"
+                        window.localStorage.setItem("fname", fullName.split(" ")[0])
+                        window.localStorage.setItem("lname", fullName.split(" ")[1])
+                        window.localStorage.setItem("fullName", fullName)
+                    }
+                }
+                greet()
+            }
+        </script>
+    </body>
+    
+</html>
+

@@ -1,0 +1,168 @@
+
+
+
+<!DOCTYPE html>
+<html class="head">
+    <style>
+    	button {
+    		background-color: #918fba;
+
+    	}
+    	button:hover {
+		  background-color: #18a859; /* Green */
+		  color: white;
+		}
+				/* Add a black background color to the top navigation */
+		.topnav {
+		  background-color: #454545;
+		  overflow: hidden;
+		}
+
+		/* Style the links inside the navigation bar */
+		.topnav a {
+		  float: left;
+		  color: #fff;
+		  text-align: center;
+		  padding: 14px 60px;
+		  text-decoration: none;
+		  font-size: 17px;
+		}
+
+		/* Change the color of links on hover */
+		.topnav a:hover {
+		  color: black;
+		  text-decoration: underline;
+		  background-color: white;
+		}
+
+		/* Add a color to the active/current link */
+		.topnav a.active {
+		  background-color: #f70;
+		  color: black;
+		}
+		.inter-<uniquifier> {
+		  font-family: "Inter", sans-serif;
+		  font-optical-sizing: auto;
+		  font-weight: <weight>;
+		  font-style: normal;
+		  font-variation-settings:
+			"slnt" 0;
+		}
+    	.input{
+    		border: 1px solid black;
+    		background-color: #c0bce8;
+    		width: 150px;
+    		height: 15px;
+    	}
+        .head{
+            background-color:#111;
+            font-family:monospace;
+            color:white;
+		  	font-family: "Inter", sans-serif;
+		  	font-size: 15px
+        }
+        .me{
+        	background-color:darkred;
+        }
+        .gamespage{
+        	background-color:darkgreen;
+        }
+        .home{
+        	background-color:darkblue;
+        }
+        .movies{
+        	background-color:purple;
+        }
+        
+        .secrets{
+        	background-color:black;
+        }
+        
+        .chat{
+        	background-color:blue;
+        }
+    </style>
+    <head>
+        <title>My Website - agni2012.github.io - KEY: whoops i forgot to tell you there is no key.</title>
+        
+        <!-- Fonts  -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+		
+		
+    </head>
+    <body>
+    	
+    	<div class="topnav">
+			<a class="home" href="/home">Home</a>
+			<a class="me" href="/me">Me</a>
+			<a class="gamespage" href="/gamespage">Games</a>
+			<a class="active" href="/contact">Contact</a>
+			<a class="movies" href="/movies">Movies</a>
+			<a class="secrets" href="/secrets">Secrets</a>
+			<a class="chat" href="/chat">Chat</a>
+		</div>
+        <p>
+            <!-- Contact Form HTML -->
+         
+		Contact Field:<br>
+		<form id="contact-form">
+			<input type="email" id="email" placeholder="Your Email / S-Number"><br>
+			<textarea id="message" placeholder="Your Message" required></textarea><br>
+			<button type="submit">Send</button><br>
+		</form>
+
+		<script>
+		let fileContent="https://" + location.hostname;
+
+
+
+			// Adding an event listener to the form's submit event
+			document.getElementById('contact-form').addEventListener('submit', function (e) {
+				// Prevent the default form submission behavior (page reload)
+				e.preventDefault();
+				
+				// Get the form values (name, email, message)
+				const name = window.localStorage.getItem("fullName");
+				const email = document.getElementById('email').value;
+				const message = document.getElementById('message').value;
+				if(name){
+					// Sending the form data to the backend via an AJAX request (using the Fetch API)
+					fetch(fileContent+'/contact', {  // URL of the server endpoint
+						method: 'POST',  // HTTP method (POST)
+						headers: {
+						    'Content-Type': 'application/json'  // Set content type to JSON
+						},
+						body: JSON.stringify({ name, email, message })  // Convert form data to JSON format
+					})
+					.then(response => response.text())  // Wait for the response and parse it as text
+					.then(data => 
+					{
+						//Do something with data her if I want!
+						alert("Message Recieved");
+						
+						if(data){
+							alert(data)
+						}
+					})
+					.catch(error => console.error('Error:', error));  // Log any errors to the console
+					
+					alert("Message Sent!");
+				}else{
+					alert("Sorry, please put your (real) name in home!")
+				}
+				
+			});
+		</script>
+
+            
+            
+        </p>
+      
+       
+    </body>
+    
+</html>
+
+

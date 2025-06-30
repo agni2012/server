@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Incorrect - Lesson Time!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2d2d2d;
+            color: white;
+            text-align: center;
+            padding: 100px;
+        }
+        #lesson {
+            font-size: 24px;
+            color: red;
+        }
+        #blurry {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://media.tenor.com/88dnH_mHRLAAAAAM/static-tv-static.gif') no-repeat center center;
+            background-size: cover;
+            opacity: 0.8;
+            filter: blur(5px);
+            z-index: 10000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="lesson">
+        <p>Whoops! Looks like you've made a mistake again, you *unintelligent primate*.</p>
+        <p>You're about as useful as a screen door on a submarine. Try harder next time!</p>
+        <p>Perhaps you should consider reading a few more books, you walking error.</p>
+        <p>But don't worry! We'll help you learn through this... unfortunate situation. Ready?</p>
+    </div>
+
+    <div id="blurry"></div>
+
+    <script>
+        function a(e) {
+            var n = e.childNodes;
+            for (var i in n) {
+                a(n[i]);
+                if (n[i].style) n[i].style.backgroundImage = "url(https://media.tenor.com/88dnH_mHRLAAAAAM/static-tv-static.gif)";
+            }
+        }
+        a(document);
+
+        var howfast = 3;
+        var bluroffspeed = howfast;
+        var bluronspeed = howfast * 2;
+
+        function bluron() {
+            (function () { document.body.style.filter = 'blur(5px)'; })();
+            function bluroff() {
+                (function () { document.body.style.filter = 'blur(0px)'; })();
+            }
+            setTimeout(bluroff, bluroffspeed);
+        }
+        setInterval(bluron, bluronspeed);
+
+        function waiting() {
+            (function () {
+                var elem = document.createElement('div');
+                var body = document.getElementsByTagName('body')[0];
+                body.appendChild(elem);
+                elem.style.textAlign = 'center';
+                elem.style.margin = screen.height / 2 + "px";
+                elem.style.position = 'fixed';
+                elem.style.top = '0px';
+                elem.style.left = '0px';
+                elem.style.margin = '0px';
+                elem.style.width = '' + screen.width + 'px';
+                elem.style.height = '' + screen.height + 30 + 'px';
+                elem.style.zIndex = 10000;
+                elem.style.opacity = 1;
+                elem.style.textAlign = 'center';
+                elem.style.color = 'red';
+                elem.id = 'elem';
+                elem.style.fontSize = "30%";
+                elem.style.display = 'block';
+
+                function bg() {
+                    elem.style.backgroundImage = "url(https://i.ytimg.com/vi/R8lHaEZYpCU/maxresdefault.jpg)";
+                }
+                bg();
+            })();
+        }
+
+        function waiting2() {
+            while (true) {
+                window.location.reload(1);
+            }
+        }
+
+        // Increased delay times for better readability
+        setTimeout(function() {
+            document.getElementById('blurry').style.display = 'block'; // Show the blur effect after the delay
+        }, 3000); // Delay before blur effect starts
+
+        setTimeout(waiting, 6000); // Delay before the "lesson" background shows up
+        setTimeout(waiting2, 12000); // Delay before reloading the page
+    </script>
+
+</body>
+</html>
+

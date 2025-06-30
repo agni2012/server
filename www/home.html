@@ -1,0 +1,206 @@
+
+
+<!DOCTYPE html>
+<html class="head">
+	
+    <style>
+    	button {
+    		background-color: #918fba;
+
+    	}
+    	button:hover {
+		  background-color: #18a859; /* Green */
+		  color: white;
+		}
+				/* Add a black background color to the top navigation */
+		.topnav {
+		  background-color: #454545;
+		  overflow: hidden;
+		}
+
+		/* Style the links inside the navigation bar */
+		.topnav a {
+		  float: left;
+		  color: #fff;
+		  text-align: center;
+		  padding: 14px 60px;
+		  text-decoration: none;
+		  font-size: 17px;
+		}
+
+		/* Change the color of links on hover */
+		.topnav a:hover {
+		  color: black;
+		  text-decoration: underline;
+		  background-color: white;
+		}
+
+		/* Add a color to the active/current link */
+		.topnav a.active {
+		  background-color: #f70;
+		  color: black;
+		}
+		.inter-<uniquifier> {
+		  font-family: "Inter", sans-serif;
+		  font-optical-sizing: auto;
+		  font-weight: <weight>;
+		  font-style: normal;
+		  font-variation-settings:
+			"slnt" 0;
+		}
+    	.input{
+    		border: 1px solid black;
+    		background-color: #c0bce8;
+    		width: 150px;
+    		height: 15px;
+    	}
+        .head{
+            background-color:#111;
+            font-family:monospace;
+            color:white;
+		  	font-family: "Inter", sans-serif;
+		  	font-size: 15px
+        }
+        .me{
+        	background-color:darkred;
+        }
+        .gamespage{
+        	background-color:darkgreen;
+        }
+        .contact{
+        	background-color:darkblue;
+        }
+        .movies{
+        	background-color:purple;
+        }
+        
+        .secrets{
+        	background-color:black;
+        }
+        
+        .chat{
+        	background-color:blue;
+        }
+        /*Yes if you looked here you win ):*/
+        .hidden-link {
+		  position: fixed;
+		  bottom: 10px; /* Adjust distance from the bottom */
+		  right: 10px; /* Adjust distance from the right */
+		  font-size: 0; /* Invisible text size */
+		  opacity: 0; /* Fully transparent */
+		}
+
+		.hidden-link:hover {
+		  font-size: 14px; /* Normal text size on hover */
+		  opacity: 1; /* Fully visible on hover */
+		  color: black; /* Text color when visible */
+		}
+
+    </style>
+    
+    <head>
+        <title>My Webpage</title>
+        
+        <!-- Fonts  -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+		
+		
+    </head>
+    <body>
+    	
+    	<div class="topnav">
+			<a class="active" href="/home">Home</a>
+			<a class="me" href="/me">Me</a>
+			<a class="gamespage" href="/gamespage">Games</a>
+			<a class="contact" href="/contact">Contact</a>
+			<a class="movies" href="/movies">Movies</a>
+			<a class="secrets" href="/secrets">Secrets</a>
+			
+			<a class="chat" href="/chat">Chat</a>
+		</div>
+		
+		
+        <p>
+            <p id="greeting"></p>
+            Hi, I am Agni Rammohan! <br>
+            All my games are in the games section!<br>
+            Are you in 7th grade?<br>
+<br><br>
+			
+            <p>
+            <div id=createName>
+            Enter your first and last name here: <br>
+            <input id="input" class="input"><br>
+            <button onClick="storeName()" > Done </button>
+            
+            </div>
+            </p>
+            
+            
+		  </p>
+		  <a href="https://example.com" class="hidden-link">Click me</a>
+
+        <script>
+        
+			let fileContent="https://" + location.hostname;  // Declare a variable to store the content
+        	send(window.localStorage.getItem("fullName") + " entered home")
+        	
+        	//console.log()
+        	if(window.localStorage.getItem("fullName")){
+        		document.getElementById("createName").innerHTML = "<br><button onClick='changeName();'> Change Name </button>";
+        	}
+            function greet(){
+                if(window.localStorage.getItem("fname") != null) {
+                    document.getElementById("greeting").innerHTML="Hello " + window.localStorage.getItem("fname")+"!";
+                }
+                
+            }
+            
+            greet();
+            function changeName(){
+            	var newName=prompt("New (full) Name:");
+            	
+                send(window.localStorage.getItem("fullName")+" was changed to: "+newName );
+            	window.localStorage.setItem("fullName",newName);
+            	window.localStorage.setItem("fname", newName.split(" ")[0])
+                window.localStorage.setItem("lname", newName.split(" ")[1])
+                greet();  
+            }
+            function storeName(){
+            
+				var fullName = document.getElementById("input").value;
+				send(window.localStorage.getItem("fullName")+" changed name to "+fullName)
+				window.localStorage.setItem("fname", fullName.split(" ")[0])
+				window.localStorage.setItem("lname", fullName.split(" ")[1])
+				window.localStorage.setItem("fullName", fullName)
+				alert("Name Stored.");
+
+				greet()
+			};
+			if(!localStorage.id) localStorage.id = Math.floor(Math.random()*1000000)
+			if(localStorage.name.indexOf("pedo")) alert("What the... why do you keep changing your name!!. from not in 7th grade to this... special harrharish. btw if you wanna know what this in js becasue im nerd: "+this+":\n"+Object.keys());
+			function send(message){
+				
+					
+				console.log("message sent");
+				    // Sending the form data to the backend via an AJAX request (using the Fetch API)
+					fetch(fileContent+'/news', {  // URL of the server endpoint
+						method: 'POST',  // HTTP method (POST)
+						headers: {
+							'Content-Type': 'application/json'  // Set content type to JSON
+						},
+						body: JSON.stringify({ message: message})
+
+					})
+					.then(response => response.text())  // Wait for the response and parse it as text
+					.then(data => {})  // Show an alert with the response from the server
+					.catch(error => console.error('Error:', error));  // Log any errors to the console
+		    }
+		</script>
+        
+    </body>
+    
+</html>
+

@@ -1,0 +1,153 @@
+
+
+<!DOCTYPE html>
+<html class="head">
+    <style>
+        
+        
+    	button {
+    		background-color: #918fba;
+
+    	}
+    	button:hover {
+		  background-color: #18a859; /* Green */
+		  color: white;
+		}
+		
+		/* Style the links inside the navigation bar */
+		.topnav a {
+		  float: left;
+		  color: #fff;
+		  text-align: center;
+		  padding: 14px 60px;
+		  text-decoration: none;
+		  font-size: 17px;
+		}
+
+		/* Change the color of links on hover */
+		.topnav a:hover {
+		  color: black;
+		  text-decoration: underline;
+		  background-color: white;
+		}
+
+		/* Add a color to the active/current link */
+		.topnav a.active {
+		  background-color: #f70;
+		  color: black;
+		}
+		.inter-<uniquifier> {
+		  font-family: "Inter", sans-serif;
+		  font-optical-sizing: auto;
+		  font-weight: <weight>;
+		  font-style: normal;
+		  font-variation-settings:
+			"slnt" 0;
+		}
+    	.input{
+    		border: 1px solid black;
+    		background-color: #c0bce8;
+    		width: 150px;
+    		height: 15px;
+    	}
+        .head{
+            background-color:#111;
+            font-family:monospace;
+            color:white;
+		  	font-family: "Inter", sans-serif;
+		  	font-size: 15px
+        }
+        .home{
+        	background-color:darkred;
+        }
+        .gamespage{
+        	background-color:darkgreen;
+        }
+        .contact{
+        	background-color:darkblue;
+        }
+        .movies{
+        	background-color:purple;
+        }
+        
+        .secrets{
+        	background-color:black;
+        }
+        .chat{
+        	background-color:blue;
+        }
+        
+    </style>
+    <head>
+        <title>My Webpage</title>
+        
+        <!-- Fonts  -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+		
+		
+    </head>
+    <body>
+    	
+    	<div class="topnav">
+			<a class="home" href="/home">Home</a>
+			<a class="active" href="/me">Me</a>
+			<a class="gamespage" href="/gamespage">Games</a>
+			<a class="contact" href="/contact">Contact</a>
+			<a class="movies" href="/movies">Movies</a>
+			<a class="secrets" href="/secrets">Secrets</a>
+			<a class="chat" href="/chat">Chat</a>
+		</div>
+		<br><br>
+		<p id="p">
+        Im Agni Rammohan, and I am 12.<br>
+        I love programming, and coded this webpage.<br>
+        <br>
+        </p>
+        
+        <script>
+			function updateAge(){
+				var startDate = new Date("March 1, 2012 12:10:15"); // Specific start date and time
+				var currentDate = new Date(); // Current date and time
+
+				// Calculate the time difference in milliseconds
+				var elapsedMs = currentDate - startDate;
+
+				// Convert milliseconds to seconds, minutes, hours, days, years, and milliseconds
+				var elapsedSeconds = Math.floor(elapsedMs / 1000);
+				var elapsedMinutes = Math.floor(elapsedSeconds / 60);
+				var elapsedHours = Math.floor(elapsedMinutes / 60);
+				var elapsedDays = Math.floor(elapsedHours / 24);
+				var elapsedYears = Math.floor(elapsedDays / 365.25); // Account for leap years
+
+				var years = elapsedYears;
+				var remainingDays = Math.floor(elapsedDays - years * 365.25); // Subtract full years' worth of days
+
+				var hours = elapsedHours % 24;
+				var mins = elapsedMinutes % 60;
+				var secs = elapsedSeconds % 60;
+				var remainingMs = elapsedMs % 1000; // Remaining milliseconds
+
+				var elem = document.getElementById("p");
+				elem.innerHTML = `I'm Agni Rammohan.<br>I am exactly: <br>${years} years, ${remainingDays} days, ${hours} hours, ${mins} minutes, ${secs} seconds, and ${remainingMs} milliseconds old. <br>
+				I love programming, and coded this webpage.
+				`
+			}
+			
+			//repeatedly update age:
+			setInterval(updateAge,11);
+       		//weell i see no elems w/ id = greeting but its fine nobody carees
+            function greet(){
+                if(window.localStorage.getItem("fname") != null) {
+                    document.getElementById("greeting").innerHTML="Hello " + window.localStorage.getItem("fname")+"!";
+                }
+            }
+            
+            greet();
+        </script>
+        
+    </body>
+    
+</html>
+

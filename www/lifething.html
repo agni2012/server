@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+</head>
+<body>
+	<script>
+		var numTypes, numParticles, drag, factor, ticksPerFrame;
+		var forces, clamp, particles, colors, Particle;
+		var buffer = new ArrayBuffer(4);
+		var f32 = new Float32Array(buffer);
+		var u32 = new Uint32Array(buffer);
+		var tableSize = 360;
+		var sinTable = [];
+		var cosTable = [];
+		var TWO_PI = 3.1415*2
+		for (let i = 0; i < tableSize; i++) {
+		  let a = (i / tableSize) * TWO_PI;
+		  sinTable[i] = Math.sin(a);
+		  cosTable[i] = Math.cos(a);
+		}
+		function fastSin(a) {
+		  a = a % TWO_PI;
+		  if (a < 0) a += TWO_PI;
+		  let index = floor((a / TWO_PI) * tableSize);
+		  return sinTable[index];
+		}
+		function fastCos(a) {
+		  a = a % TWO_PI;
+		  if (a < 0) a += TWO_PI;
+		  let index = floor((a / TWO_PI) * tableSize);
+		  return cosTable[index];
+		}
+		function fastSqrt(x) {
+		  let xhalf = 0.5 * x;
+		  f32[0] = x;
+		  let i = u32[0];
+		  i = 0x5f3759df - (i >> 1); // magic constant for inverse sqrt
+		  u32[0] = i;
+		  let y = f32[0];
+		  y = y * (1.5 - xhalf * y * y); // one Newton-Raphson iteration
+		  return x * y;
+		}
+		setup = function(){
+			createCanvas(400,400);
+			pixelDensity(40);
+			numTypes = 3;
+			numParticles = 150;
+			drag = 0.95;
+			factor = 7;
+			ticksPerFrame = 60;
+
+			forces = [];
+			
+			/*jshint ignore: start*/
+			for(var i=0;i<numTypes;i++){
+				forces[i]=[];
+				for(var j=0;j<numTypes;j++){
+					forces[i][j] = random(-factor,factor);
+				}
+			}
+			clamp = constrain;
+			particles = [];
+			colors = [];
+			for(var i=0;i<numTypes;i++){
+				colors.push(
+					[color(random(0,255), random(0,255), random(0,255)),
+					random(7,15),
+					random(1,3)]
+				);
+			}
+			Particle = function(x, y, xv, yv, type){
+				this.x = x;
+				this.y = y;
+				this.type = type;
+				this.xv = xv;
+				this.yv = yv;
+				this.mass = colors[this.type][2];
+				this.index = particles.length;
+				this.update = function(){
+					this.x += this.xv *= drag;
+					this.y += this.yv *= drag;
+					this.xv = clamp(this.xv, -1, 1);
+					this.yv = clamp(this.yv, -1, 1);
+
+					// Cache properties to reduce lookups
+					var x = this.x, y = this.y, type = this.type, mass = this.mass;
+					for(var i = 0; i < particles.length; i++){
+						if(this.index !== i){
+							var other = particles[i];
+							var dx = x - other.x;
+							var dy = y - other.y;
+							// Manual distance computation instead of dist(0,0,dx,dy)
+							var d2 = dx*dx + dy*dy;
+							var d = fastSqrt(d2);
+							var angle = atan2(dy, dx);
+							var ca = fastCos(angle), sa = fastSin(angle);
+							
+							if(d < 15){
+								var f = clamp(1/d2, 0, 20);
+								this.xv += ca * f / 20;
+								this.yv += sa * f / 20;
+							}
+							if(d > 15){
+								var force = forces[type][other.type];
+								var f2 = clamp(1/d2, 0, 4) / mass;
+								this.xv += ca * force * f2;
+								this.yv += sa * force * f2;
+							}
+						}
+					}
+					var borderPush = 0.3;
+					if(this.x > 380){
+						this.xv -=borderPush;
+					} 
+					
+					if(this.x < 20){
+						this.xv += borderPush;
+					} 
+					
+					if(this.y > 380){
+						this.yv -= borderPush;
+					} 
+					
+					if(this.y < 20){
+						this.yv += borderPush;
+					} 
+					
+				};
+				this.draw = function(){
+					fill(colors[this.type][0], 100);
+					noStroke();
+					ellipse(this.x, this.y, colors[this.type][1], colors[this.type][1]);
+				};
+			};
+			for(var i=0;i<numParticles;i++){
+				var type = floor(random(0, numTypes));
+				particles.push(new Particle(
+					random(0,400), random(0, 400),
+					random(-0.5,0.5), random(-0.5, 0.5),
+					type));
+			}
+			frameRate(100000);
+			background(0);
+		}
+		draw = function(){
+			//this['KAInfiniteLoopProtect'.repeat(1)] = -Infinity;
+			background(0);
+			try{
+				for(var j=0;j<particles.length;j++){
+					particles[j].draw();
+				}
+				for(var i=0;i<ticksPerFrame;i++){
+					for(var j=0;j<particles.length;j++){
+						particles[j].update();
+					}
+				}
+			}catch(e){}
+			if(mouseIsPressed){
+				stroke(255);
+				noFill();
+				ellipse(mouseX, mouseY, 200,200);
+				for(var i = 0;i<particles.length;i++){
+					var dx = mouseX - particles[i].x;
+					var dy = mouseY - particles[i].y;
+					if(dx*dx + dy*dy < 100*100){
+						var angle = atan2(dy, dx);
+						particles[i].x += cos(angle)*20;
+						particles[i].y += sin(angle)*20;
+					}
+				}
+				
+			}
+			for(var i = 0;i<particles.length;i++){
+				var dx = 200 - particles[i].x;
+				var dy = 200 - particles[i].y;
+				var d2 = dx*dx + dy*dy;
+				if(d2 > 100*100){
+					var angle = atan2(dy, dx);
+					
+					particles[i].x += cos(angle)*(d2-100*100)/3000;
+					particles[i].y += sin(angle)*(d2-100*100)/3000;
+				}
+			}
+		};
+
+    </script>
+</body>
+</html>
+
